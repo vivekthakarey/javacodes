@@ -1,79 +1,45 @@
-package com.vivek.javageek;
+package com.vivek.javageek.generics;
 
-import java.util.Scanner;
+import java.util.Arrays;
 
-public class Stack {
-
-	private static int arrIndex = 0;
-	public static int [] array = new int [5];
+public class Stack<T> {
 	
-	public static void main(String[] args) {
-		System.out.println("Stack program starts here 1-Push, 2-Pop, 3-Print Stack, 4-Exit: ");
-		int data = 0;
-		Scanner scanner = new Scanner(System.in);
-		outofSystemFlow : while(true){
-			System.out.print("Enter Decision - ");
-			try{
-				data = Integer.parseInt(scanner.nextLine());
-				System.out.println("");
-			}catch(NumberFormatException ne){
-				System.out.println("Please enter valid number");	
-			}
-
-			switch(data){
-			case 1:
-				if(arrIndex == array.length){
-					System.out.println("Stack is full");
-				}else{
-					System.out.print("Enter Data :");
-					data = Integer.parseInt(scanner.nextLine());
-					System.out.println("");
-					push(data);	
-				}
-				break;
-			case 2 :
-				int value = pop();
-				if(value == -1){
-					System.out.println("Stack is empty, please push data to retrieve");
-				}else{
-					System.out.println("Pop Value : "+value);	
-				}
-				break;
-			case 3 :
-				displayStack();
-			case 4 :
-				System.out.println("Thank you for visiting...");
-				break outofSystemFlow;
-			default : System.out.println("Please enter valid decision...");
-			}			
+	private int top = -1;
+	private T[] stackArray = (T[]) new Object[5];
+	private static Stack stack = null;
+	
+	private Stack(){}
+	
+	public static Stack getInstance(){
+		if(stack == null){
+			stack = new Stack();
 		}
+		return stack;
 	}
 	
-	public static void push(int data){
-		System.out.println("arrIndex push :: "+arrIndex);
-		array[arrIndex] = data;	
-		arrIndex++;
+	public void push(T item) throws StackException{
+		if(top == stackArray.length - 1){
+			throw new StackException("Stack is full");
+		}
+		stackArray[++top] = item;
 	}
 	
-	public static int pop(){
-		System.out.println("arrIndex pop :: "+arrIndex);
-		int returnval = -1;
-		if(arrIndex == 0){
-			System.out.println("Stack is empty");
-		}else{
-			arrIndex--;
-			returnval = array[arrIndex];
-			array[arrIndex] = 0;
+	public T peek() throws StackException{
+		if(top == -1){
+			throw new StackException("Stack is Empty");
 		}
-		return returnval;
+		return stackArray[top];
 	}
 	
-	public static void displayStack(){
-		System.out.print("The stack values are : ");
-		for(int arrayVal : array){
-			System.out.print(arrayVal+",");
+	public T pop() throws StackException{
+		if(top == -1){
+			throw new StackException("Stack is Empty");
 		}
-		System.out.println("");
+		return stackArray[top--];
+	}
+	
+	public void displayStackElements(){
+		System.out.println(" Stack Elements are : "+Arrays.toString(stackArray));
 	}
 
 }
